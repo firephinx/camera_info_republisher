@@ -32,6 +32,8 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_(), camera_info_received_(fa
 
     while (ros::ok())
     {
+        camera_info_.header.seq = camera_info_.header.seq + 1;
+        camera_info_.header.stamp = ros::Time::now();
         camera_info_publisher_.publish(camera_info_);
 
         ros::spinOnce();
