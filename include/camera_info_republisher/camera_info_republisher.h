@@ -17,9 +17,7 @@ class CameraInfoRepublisher
         ros::Subscriber camera_info_subscriber_;
         ros::Publisher camera_info_publisher_;
 
-        ros::Rate rate_;
-
-        void setCameraInfo(const sensor_msgs::CameraInfoConstPtr&);
+        void setCameraInfo(const sensor_msgs::CameraInfoConstPtr& camera_info);
 
     public:
         CameraInfoRepublisher();

@@ -1,9 +1,10 @@
 <launch>
  
  <node name="camera_info_republisher" pkg="camera_info_republisher" type="camera_info_republisher_node" output="screen">
-  <param name="static_camera_info" value="true" />
-  <param name="camera_info_input_topic_name" value="/camera/camera_info" />
-  <param name="camera_info_output_topic_name" value="/camera_info_republisher/camera/camera_info" />
+  <param name="publish_frequency" 				value="10" />
+  <param name="static_camera_info" 				value="true" />
+  <param name="camera_info_input_topic_name" 	value="/camera/camera_info" />
+  <param name="camera_info_output_topic_name" 	value="/camera_info_republisher/camera/camera_info" />
  </node>
 
 </launch>
