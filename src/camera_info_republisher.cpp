@@ -1,12 +1,12 @@
 #include "camera_info_republisher/camera_info_republisher.h"
 
-CameraInfoRepublisher::CameraInfoRepublisher() : nh_(), camera_info_received_(false)
+CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher"), camera_info_received_(false)
 {
     double publish_frequency;
-    nh_.param("/camera_info_republisher/publish_frequency", publish_frequency, (double) 10.0);
-    nh_.param("/camera_info_republisher/static_camera_info", static_camera_info_, true);
-    nh_.param("/camera_info_republisher/camera_info_input_topic_name", camera_info_input_topic_name_, std::string("/camera/camera_info"));
-    nh_.param("/camera_info_republisher/camera_info_output_topic_name", camera_info_output_topic_name_, std::string("/camera_info_republisher/camera/camera_info"));
+    nh_.param("publish_frequency", publish_frequency, (double) 10.0);
+    nh_.param("static_camera_info", static_camera_info_, true);
+    nh_.param("camera_info_input_topic_name", camera_info_input_topic_name_, std::string("/camera/camera_info"));
+    nh_.param("camera_info_output_topic_name", camera_info_output_topic_name_, std::string("/camera_info_republisher/camera/camera_info"));
 
     ros::Rate rate(publish_frequency);
 
