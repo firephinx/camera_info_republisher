@@ -1,6 +1,6 @@
 #include "camera_info_republisher/camera_info_republisher.h"
 
-CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher"), camera_info_received_(false)
+CameraInfoRepublisher::CameraInfoRepublisher() : nh_("~"), camera_info_received_(false)
 {
     double publish_frequency;
     bool static_camera_info;

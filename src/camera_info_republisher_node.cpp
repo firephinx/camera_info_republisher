@@ -3,7 +3,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "camera_info_republisher");
+  ros::init(argc, argv, "camera_info_republisher_node", ros::init_options::AnonymousName);
 
   CameraInfoRepublisher camera_info_republisher;
 
