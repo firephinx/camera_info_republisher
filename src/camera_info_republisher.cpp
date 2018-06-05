@@ -6,22 +6,20 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher")
     bool static_camera_info;
     std::string input_camera_info_topic_name;
     std::string output_camera_info_topic_name;
-    std::string output_camera_info_frame_id_name;
-    bool change_frame_id;
 
     nh_.param("publish_frequency", publish_frequency, (double) 10.0);
     nh_.param("static_camera_info", static_camera_info, true);
     nh_.param("input_camera_info_topic_name", input_camera_info_topic_name, std::string("/camera/camera_info"));
     nh_.param("output_camera_info_topic_name", output_camera_info_topic_name, std::string("/camera_info_republisher/camera/camera_info"));
-    nh_.param("output_camera_info_frame_id_name", output_camera_info_frame_id_name, std::string(""));
+    nh_.param("output_camera_info_frame_id_name", output_camera_info_frame_id_name_, std::string(""));
 
-    if(output_camera_info_frame_id_name.empty())
+    if(output_camera_info_frame_id_name_.empty())
     {
-        change_frame_id = false;
+        change_frame_id_ = false;
     }
     else
     {
-        change_frame_id = true;
+        change_frame_id_ = true;
     }
 
     ros::Rate rate(publish_frequency);
@@ -50,10 +48,7 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher")
     {
         camera_info_.header.seq = camera_info_.header.seq + 1;
         camera_info_.header.stamp = ros::Time::now();
-        if(change_frame_id)
-        {
-            camera_info_.header.frame_id = output_camera_info_frame_id_name;
-        }
+        
         camera_info_publisher_.publish(camera_info_);
 
         ros::spinOnce();
@@ -65,6 +60,10 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher")
 void CameraInfoRepublisher::setCameraInfo(const sensor_msgs::CameraInfoConstPtr& camera_info)
 {
     camera_info_ = *camera_info;
+    if(change_frame_id_)
+    {
+        camera_info_.header.frame_id = output_camera_info_frame_id_name_;
+    }
     camera_info_received_ = true;
     ROS_INFO("Received camera info.");
 }

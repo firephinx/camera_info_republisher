@@ -9,6 +9,8 @@ class CameraInfoRepublisher
     private:
         ros::NodeHandle nh_;
         sensor_msgs::CameraInfo camera_info_;
+        std::string output_camera_info_frame_id_name_;
+        bool change_frame_id_;
         bool camera_info_received_;
 
         ros::Subscriber camera_info_subscriber_;
