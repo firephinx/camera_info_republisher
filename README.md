@@ -11,4 +11,4 @@ This ros package is used for republishing a camera_info topic locally.
 ## Usage Instructions
 1. First build the ros package using `catkin_make` in your catkin workspace.
 2. Source your `devel/setup.bash` in your catkin workspace.
-3. Start the camera_info_republisher node with the command `roslaunch camera_info_republisher camera_info_republisher.launch`.
+3. Start the camera_info_republisher node with the command `roslaunch camera_info_republisher camera_info_republisher_node.launch`.
