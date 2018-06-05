@@ -8,10 +8,7 @@ class CameraInfoRepublisher
 {
     private:
         ros::NodeHandle nh_;
-        std::string camera_info_input_topic_name_;
-        std::string camera_info_output_topic_name_;
         sensor_msgs::CameraInfo camera_info_;
-        bool static_camera_info_;
         bool camera_info_received_;
 
         ros::Subscriber camera_info_subscriber_;

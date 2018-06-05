@@ -3,14 +3,30 @@
 CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher"), camera_info_received_(false)
 {
     double publish_frequency;
+    bool static_camera_info;
+    std::string input_camera_info_topic_name;
+    std::string output_camera_info_topic_name;
+    std::string output_camera_info_frame_id_name;
+    bool change_frame_id;
+
     nh_.param("publish_frequency", publish_frequency, (double) 10.0);
-    nh_.param("static_camera_info", static_camera_info_, true);
-    nh_.param("camera_info_input_topic_name", camera_info_input_topic_name_, std::string("/camera/camera_info"));
-    nh_.param("camera_info_output_topic_name", camera_info_output_topic_name_, std::string("/camera_info_republisher/camera/camera_info"));
+    nh_.param("static_camera_info", static_camera_info, true);
+    nh_.param("input_camera_info_topic_name", input_camera_info_topic_name, std::string("/camera/camera_info"));
+    nh_.param("output_camera_info_topic_name", output_camera_info_topic_name, std::string("/camera_info_republisher/camera/camera_info"));
+    nh_.param("output_camera_info_frame_id_name", output_camera_info_frame_id_name, std::string(""));
+
+    if(output_camera_info_frame_id_name.empty())
+    {
+        change_frame_id = false;
+    }
+    else
+    {
+        change_frame_id = true;
+    }
 
     ros::Rate rate(publish_frequency);
 
-    camera_info_subscriber_ = nh_.subscribe(camera_info_input_topic_name_, 1, &CameraInfoRepublisher::setCameraInfo, this);
+    camera_info_subscriber_ = nh_.subscribe(input_camera_info_topic_name, 1, &CameraInfoRepublisher::setCameraInfo, this);
 
     ROS_INFO("Waiting for camera info.");
     while (!camera_info_received_  && ros::ok())
@@ -20,7 +36,7 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher")
         rate.sleep();
     }
 
-    if(static_camera_info_)
+    if(static_camera_info)
     {
         ROS_INFO("Static_camera_info was set to True so shutting down camera info subscriber.");
         camera_info_subscriber_.shutdown();
@@ -28,12 +44,16 @@ CameraInfoRepublisher::CameraInfoRepublisher() : nh_("/camera_info_republisher")
 
     ROS_INFO("Starting camera info publisher.");
 
-    camera_info_publisher_ = nh_.advertise<sensor_msgs::CameraInfo>(camera_info_output_topic_name_, 1);
+    camera_info_publisher_ = nh_.advertise<sensor_msgs::CameraInfo>(output_camera_info_topic_name, 1);
 
     while (ros::ok())
     {
         camera_info_.header.seq = camera_info_.header.seq + 1;
         camera_info_.header.stamp = ros::Time::now();
+        if(change_frame_id)
+        {
+            camera_info_.header.frame_id = output_camera_info_frame_id_name;
+        }
         camera_info_publisher_.publish(camera_info_);
 
         ros::spinOnce();
